@@ -4,7 +4,7 @@ import math
 
 img = Image.open("input.jpeg").convert("RGBA")
 arr = np.array(img)
-rotation = math.radians(90)
+rotation = math.radians(45)
 out = np.zeros_like(arr)
 
 for butie_x in range(360):
