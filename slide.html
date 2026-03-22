@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>行列と画像処理の数理 (全6枚)</title>
+    <title>行列と画像処理の数理 (全7枚)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         body { 
             font-family: 'Noto Sans JP', sans-serif; 
@@ -29,8 +32,19 @@
             display: flex;
             flex-direction: column;
         }
-        /* Code Syntax Highlighting Sim */
-        .code-block { background: #1e1e1e; color: #d4d4d4; font-family: 'JetBrains Mono', monospace; padding: 1rem; border-radius: 0.5rem; }
+        
+        /* Better Code Block Styling */
+        .code-block { 
+            background: #1e1e1e; 
+            color: #d4d4d4; 
+            font-family: 'JetBrains Mono', monospace; 
+            padding: 1.5rem; 
+            border-radius: 0.5rem; 
+            line-height: 1.6;
+            font-size: 0.85rem;
+            white-space: pre; 
+            overflow-x: auto;
+        }
         .kw { color: #569cd6; } /* keyword */
         .var { color: #9cdcfe; } /* variable */
         .num { color: #b5cea8; } /* number */
@@ -55,7 +69,7 @@
                 <span class="text-blue-600">数理と実装</span>
             </h1>
             <p class="text-xl text-slate-600 mb-12">
-                行列の式(Ax)はプログラムの中でどう動くのか。<br>
+                行列の式 \( A\mathbf{x} \) はプログラムの中でどう動くのか。<br>
                 <span class="font-mono text-sm bg-slate-200 px-2 py-1 rounded">draft.py</span> から <span class="font-mono text-sm bg-slate-200 px-2 py-1 rounded">sample.py</span> への進化過程。
             </p>
             
@@ -68,7 +82,7 @@
                     <i class="fas fa-arrow-right"></i>
                 </div>
                 <div class="w-32 h-32 bg-white p-2 shadow-lg transform rotate-6">
-                    <img src="./output.png" alt="Output" class="w-full h-full object-cover">
+                    <img src="./output_45.png" alt="Output" class="w-full h-full object-cover">
                     <div class="text-xs text-center mt-1">After</div>
                 </div>
             </div>
@@ -85,26 +99,29 @@
                 <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
                     <h3 class="font-bold text-blue-800 mb-2">単純な回転行列</h3>
                     <p class="text-sm text-slate-600 mb-4">原点(0,0)を中心とした回転数式をそのまま実装。</p>
-                    <div class="font-serif italic text-xl text-center">
-                        x' = x cosθ - y sinθ<br>
-                        y' = x sinθ + y cosθ
+                    <div class="text-center text-lg">
+                        \[
+                        \begin{pmatrix} x' \\ y' \end{pmatrix} = 
+                        \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}
+                        \begin{pmatrix} x \\ y \end{pmatrix}
+                        \]
                     </div>
                 </div>
 
                 <div class="code-block text-sm flex-1">
 <span class="comment"># draft.py の実装</span>
 <span class="kw">for</span> y <span class="kw">in</span> <span class="func">range</span>(360):
-  <span class="kw">for</span> x <span class="kw">in</span> <span class="func">range</span>(360):
-    <span class="comment"># 数式通りの実装</span>
-    calc_x = math.cos(r)*x - math.sin(r)*y
-    calc_y = math.sin(r)*x + math.cos(r)*y
-    
-    <span class="comment"># 整数丸め</span>
-    x2 = <span class="func">int</span>(<span class="func">round</span>(calc_x))
-    y2 = <span class="func">int</span>(<span class="func">round</span>(calc_y))
-    
-    out[y2, x2] = arr[y, x]
-                </div>
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="func">range</span>(360):
+        <span class="comment"># 数式通りの実装</span>
+        calc_x = math.cos(r) * x - math.sin(r) * y
+        calc_y = math.sin(r) * x + math.cos(r) * y
+        
+        <span class="comment"># 整数丸め</span>
+        x2 = <span class="func">int</span>(<span class="func">round</span>(calc_x))
+        y2 = <span class="func">int</span>(<span class="func">round</span>(calc_y))
+        
+        out[y2, x2] = arr[y, x]
+</div>
             </div>
 
             <div class="w-1/2 flex flex-col items-center justify-center bg-slate-100 rounded-xl relative">
@@ -112,16 +129,17 @@
                 
                 <div class="grid grid-cols-2 gap-4 w-full px-8">
                     <div class="text-center">
-                        <div class="bg-white p-2 shadow mb-2 h-40 flex items-center justify-center border-2 border-green-400">
-                            <span class="text-green-600 font-bold">成功</span>
+                        <div class="bg-white p-1 shadow mb-2 h-40 flex items-center justify-center border-2 border-green-400 overflow-hidden relative">
+                            <img src="./output_90.png" alt="90 degree rotation" class="w-full h-full object-contain">
+                            <span class="absolute bottom-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded shadow">成功</span>
                         </div>
                         <p class="font-bold">90度回転</p>
                         <p class="text-xs text-slate-500">整数→整数への変換のため<br>綺麗に回る</p>
                     </div>
                     <div class="text-center">
-                        <div class="bg-white p-2 shadow mb-2 h-40 flex items-center justify-center border-2 border-red-400 relative overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center text-slate-200 text-6xl opacity-20"><i class="fas fa-bug"></i></div>
-                            <span class="text-red-600 font-bold z-10">崩壊</span>
+                        <div class="bg-white p-1 shadow mb-2 h-40 flex items-center justify-center border-2 border-red-400 overflow-hidden relative">
+                            <img src="./output_draft.png" alt="45 degree rotation" class="w-full h-full object-contain border border-slate-100">
+                            <span class="absolute bottom-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow">崩壊</span>
                         </div>
                         <p class="font-bold">45度回転</p>
                         <p class="text-xs text-slate-500">座標がマイナスになり切れる<br>穴が開く</p>
@@ -137,44 +155,44 @@
         </div>
         
         <div class="flex flex-1 p-12 gap-12 items-center bg-slate-50">
-            <div class="w-1/2 bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-500 h-full">
-                <h3 class="text-xl font-bold text-purple-700 mb-4"><i class="fas fa-arrows-alt mb-2 mr-2"></i>問題A: 回転の中心</h3>
-                <p class="text-slate-600 mb-6">
-                    画像データは左上 $(0,0)$ が原点。<br>
-                    そのまま回転行列をかけると、<span class="font-bold text-red-500">原点中心に大きく移動</span>してしまう。
+            <div class="w-1/2 bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-600 h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-2 py-1">致命的エラー</div>
+                <h3 class="text-xl font-bold text-red-700 mb-4"><i class="fas fa-bomb mb-2 mr-2"></i>数学的崩壊: 行列式 = 0</h3>
+                <p class="text-slate-600 mb-4 text-sm">
+                    Y座標の計算式で符号を間違えて実装していた。<br>
+                    その結果、45度で<span class="font-bold text-red-600">特異行列（ランク落ち）</span>になっていた。
                 </p>
-                <div class="bg-slate-100 h-48 rounded relative overflow-hidden border border-slate-300">
-                    <div class="absolute top-0 left-0 w-2 h-2 bg-black rounded-full z-10"></div>
-                    <div class="absolute top-2 left-2 text-xs font-mono">Origins(0,0)</div>
-                    <div class="absolute top-10 left-10 w-24 h-24 bg-blue-200 border-2 border-blue-500 flex items-center justify-center opacity-50">Before</div>
-                    <div class="absolute top-[-20px] left-[-40px] w-24 h-24 bg-red-200 border-2 border-red-500 flex items-center justify-center transform -rotate-45">After</div>
+                <div class="bg-slate-100 p-4 rounded border border-slate-300 text-center mb-4">
+                    <div class="text-sm text-slate-500 mb-2">draft.py の行列</div>
+                    <div class="text-lg">
+                        \[ \det \begin{pmatrix} c & -s \\ \mathbf{-s} & c \end{pmatrix} = c^2 - s^2 = \cos(2\theta) \]
+                    </div>
                 </div>
-                <p class="text-right text-red-500 font-bold text-sm mt-2">画面外へ消失！</p>
+                <p class="text-slate-700 text-sm text-center">
+                    \[ \theta=45^\circ \implies \cos(90^\circ) = \mathbf{0} \]
+                </p>
+                <p class="text-red-600 font-bold text-sm mt-4 text-center border-t border-slate-200 pt-2">
+                    平面が「直線」に潰れ、画像が消失した。
+                </p>
             </div>
 
-            <div class="w-1/2 bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-500 h-full">
-                <h3 class="text-xl font-bold text-red-700 mb-4"><i class="fas fa-th mb-2 mr-2"></i>問題B: 順方向マッピングの穴</h3>
-                <p class="text-slate-600 mb-6">
-                    $x' = 100.7$ などの計算結果を無理やり整数に丸めると、<br>
-                    <span class="font-bold text-red-500">「誰も来ないマス」</span>が発生する。
-                </p>
-                <div class="flex justify-center items-center gap-2">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-blue-500 text-white flex items-center justify-center rounded mb-1">P1</div>
-                        <i class="fas fa-arrow-right text-slate-400 transform rotate-12"></i>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-blue-500 text-white flex items-center justify-center rounded mb-1">P2</div>
-                        <i class="fas fa-arrow-right text-slate-400 transform -rotate-12"></i>
-                    </div>
-                    
-                    <div class="w-px h-24 bg-slate-300 mx-4"></div>
+            <div class="w-1/2 bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-400 h-full">
+                <h3 class="text-xl font-bold text-orange-600 mb-4"><i class="fas fa-exclamation-triangle mb-2 mr-2"></i>その他の要因</h3>
+                
+                <div class="mb-6">
+                    <h4 class="font-bold text-slate-700 text-sm mb-1">A. 回転の中心 (Origin)</h4>
+                    <p class="text-xs text-slate-600">
+                        左上原点のまま回したため、位置も大きくずれていた。<br>
+                        (行列式0の崩壊と同時に、画面外へ飛んでいた)
+                    </p>
+                </div>
 
-                    <div class="grid grid-cols-3 gap-1">
-                        <div class="w-12 h-12 bg-slate-200 border border-slate-300"></div>
-                        <div class="w-12 h-12 bg-red-500 text-white flex items-center justify-center border border-red-600 text-xs">衝突</div>
-                        <div class="w-12 h-12 bg-black text-white flex items-center justify-center border border-slate-800 text-xs">穴</div>
-                    </div>
+                <div>
+                    <h4 class="font-bold text-slate-700 text-sm mb-1">B. 順方向マッピング (Holes)</h4>
+                    <p class="text-xs text-slate-600">
+                        90度のような整数の場合でも発生しうる「穴」の問題。<br>
+                        しかし45度での「崩壊」の主犯は特異行列だった。
+                    </p>
                 </div>
             </div>
         </div>
@@ -182,69 +200,67 @@
 
     <div class="slide">
         <div class="w-full h-20 border-b border-slate-200 flex items-center px-12 bg-white">
-            <h2 class="text-2xl font-bold text-slate-800">3. 解決策：行列の積 (sample.py)</h2>
+            <h2 class="text-2xl font-bold text-slate-800">3. 解決策：正しい行列と合成 (sample.py)</h2>
         </div>
 
         <div class="flex flex-1 p-8 gap-8">
             <div class="w-1/2 flex flex-col justify-center">
-                <h3 class="text-xl font-bold text-blue-700 mb-6">中心回転を実現する「行列の積」</h3>
-                <p class="text-slate-600 mb-4">
-                    単に回転行列 $R$ をかけるのではなく、<br>
-                    <span class="font-bold">「平行移動して、回して、戻す」</span>という合成変換を行う。
-                </p>
+                <h3 class="text-xl font-bold text-blue-700 mb-6">数式の修正と合成</h3>
                 
-                <div class="bg-white p-6 rounded-xl shadow border border-slate-200 text-center space-y-4">
-                    <div class="flex items-center justify-center gap-4 text-sm font-mono">
-                        <div class="p-3 bg-slate-100 rounded border border-slate-300">
-                            <div class="font-bold text-slate-500">Step 1</div>
-                            $x - cx$<br>中心へ移動
+                <div class="bg-white p-6 rounded-xl shadow border border-slate-200 space-y-6">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="font-bold text-slate-700">1. 回転行列の符号修正</span>
                         </div>
-                        <i class="fas fa-arrow-right text-slate-400"></i>
-                        <div class="p-3 bg-blue-100 rounded border border-blue-300">
-                            <div class="font-bold text-blue-600">Step 2</div>
-                            $R \cdot \mathbf{x}$<br>回転
-                        </div>
-                        <i class="fas fa-arrow-right text-slate-400"></i>
-                        <div class="p-3 bg-slate-100 rounded border border-slate-300">
-                            <div class="font-bold text-slate-500">Step 3</div>
-                            $+ cx$<br>元の位置へ
-                        </div>
+                        <p class="text-sm text-slate-600 pl-6">
+                            行列式が常に \(1\) になる正しい回転行列へ。<br>
+                            \( y' = s \cdot x + c \cdot y \)
+                        </p>
                     </div>
-                    <div class="border-t border-slate-200 pt-4">
-                        <p class="font-serif italic text-xl">
-                            $\mathbf{x}' = R(\mathbf{x} - \mathbf{c}) + \mathbf{c}$
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-layer-group text-blue-500"></i>
+                            <span class="font-bold text-slate-700">2. 中心回転への合成 (Affine)</span>
+                        </div>
+                        <p class="text-sm text-slate-600 pl-6">
+                            「平行移動 \(T\)」を組み合わせて中心を維持。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-3 rounded text-center border border-blue-100 mt-4">
+                        <p class="text-lg text-blue-900">
+                            \[ \mathbf{x}' = T \cdot R_{\text{correct}} \cdot T^{-1} \cdot \mathbf{x} \]
                         </p>
                     </div>
                 </div>
             </div>
 
             <div class="w-1/2 flex flex-col">
-                <div class="text-sm font-bold text-slate-500 mb-2">sample.py の実装部分</div>
+                <div class="text-sm font-bold text-slate-500 mb-2">sample.py の修正実装</div>
                 <div class="code-block text-sm flex-1 overflow-auto">
-<span class="comment"># 中心座標の計算</span>
-cx = (w - 1) / 2.0
-cy = (h - 1) / 2.0
+<span class="comment"># 修正1: 正しい回転行列 (det=1)</span>
+<span class="comment"># draft.pyではここの符号が逆(-s*x...)だった</span>
+<span class="comment"># res_y = s * shift_x + c * shift_y</span>
 
 <span class="kw">for</span> y <span class="kw">in</span> <span class="func">range</span>(h):
-  <span class="kw">for</span> x <span class="kw">in</span> <span class="func">range</span>(w):
-    
-    <span class="comment"># 1. 中心基準の座標へ (平行移動 T^-1)</span>
-    shift_x = x - cx
-    shift_y = y - cy
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="func">range</span>(w):
+        
+        <span class="comment"># 修正2: 平行移動との合成 (T^-1)</span>
+        shift_x = x - cx
+        shift_y = y - cy
 
-    <span class="comment"># 2. 回転 (R) + 3. 元へ戻す (平行移動 T)</span>
-    <span class="comment"># 式: c * (x-cx) - s * (y-cy) + cx</span>
-    res_x = c * shift_x - s * shift_y + cx
-    res_y = s * shift_x + c * shift_y + cy
+        <span class="comment"># 行列演算 (R)</span>
+        res_x = c * shift_x - s * shift_y
+        res_y = s * shift_x + c * shift_y <span class="comment"># Correct!</span>
 
-    <span class="comment"># 整数丸め</span>
-    x2 = <span class="func">int</span>(<span class="func">round</span>(res_x))
-    y2 = <span class="func">int</span>(<span class="func">round</span>(res_y))
-
-    <span class="comment"># 範囲チェック (重要)</span>
-    <span class="kw">if</span> 0 <= x2 < w <span class="kw">and</span> 0 <= y2 < h:
-        out[y2, x2] = arr[y, x]
-                </div>
+        <span class="comment"># 元へ戻す (T)</span>
+        final_x = res_x + cx
+        final_y = res_y + cy
+        
+        <span class="comment"># ... (以下、丸めと描画)</span>
+</div>
             </div>
         </div>
     </div>
@@ -268,9 +284,9 @@ cy = (h - 1) / 2.0
 
             <div class="flex flex-col items-center">
                 <div class="bg-white p-2 shadow-lg rounded transform rotate-2">
-                    <img src="./output.png" alt="Output Image" class="w-64 h-64 object-cover border border-slate-200">
+                    <img src="./output_45.png" alt="Output Image" class="w-64 h-64 object-cover border border-slate-200">
                 </div>
-                <p class="font-bold mt-4 text-blue-700">変換後 (output.png)</p>
+                <p class="font-bold mt-4 text-blue-700">変換後 (output_45.png)</p>
                 <div class="text-sm text-slate-500 text-center">
                     <p>中心回転: <span class="text-green-600 font-bold">成功</span></p>
                     <p>穴(Holes): <span class="text-slate-400 font-bold">あり (仕様)</span></p>
@@ -298,7 +314,7 @@ cy = (h - 1) / 2.0
                 <div class="bg-slate-700 p-6 rounded-lg">
                     <div class="text-blue-400 text-xl mb-2"><i class="fas fa-calculator mr-2"></i>数式の理解</div>
                     <p class="text-slate-300 text-sm">
-                        $Ax$ という抽象的な記号が、<br>
+                        \( A\mathbf{x} \) という抽象的な記号が、<br>
                         <span class="font-mono">c*x - s*y</span> という具体的な積和演算に落ちる過程を確認した。
                     </p>
                 </div>
@@ -315,7 +331,7 @@ cy = (h - 1) / 2.0
                 <div class="bg-slate-700 p-6 rounded-lg">
                     <div class="text-purple-400 text-xl mb-2"><i class="fas fa-robot mr-2"></i>AIとの協働</div>
                     <p class="text-slate-300 text-sm">
-                        45度回転での「崩壊」の原因（デジタル丸め誤差）をAIと共に特定し、実装に反映した。
+                        45度回転での「崩壊」の原因（行列式=0）をAIと共に特定し、数学的に修正した。
                     </p>
                 </div>
             </div>
@@ -323,6 +339,76 @@ cy = (h - 1) / 2.0
             <p class="text-slate-500 text-sm">
                 Linear Algebra Final Presentation
             </p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="w-full h-24 border-b border-slate-200 flex items-center px-12 bg-white z-10">
+            <div class="text-slate-500 text-2xl mr-4"><i class="fas fa-robot"></i></div>
+            <h2 class="text-3xl font-bold text-slate-800">生成系AIの利用について</h2>
+        </div>
+
+        <div class="flex-1 p-12 bg-slate-50 flex flex-col justify-center items-center">
+            
+            <p class="text-slate-600 mb-10 text-lg text-center max-w-4xl">
+                本課題において、ChatGPT等の生成系AIを「答えを丸投げする道具」ではなく、<br>
+                <span class="font-bold text-slate-800 border-b-2 border-green-500">「思考を深め、検証するパートナー」</span>として以下の通り活用しました。
+            </p>
+
+            <div class="grid grid-cols-2 gap-12 w-full max-w-5xl">
+                
+                <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-blue-500 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 text-6xl text-blue-500"><i class="fas fa-layer-group"></i></div>
+                    
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center mr-3 text-lg"><i class="fas fa-laptop-code"></i></span>
+                        スライド・資料作成
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="text-xs font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded mr-3 mt-1">Tool</span>
+                            <span class="text-slate-700 font-bold">GenSpark</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-xs font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded mr-3 mt-1">Process</span>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                必要な構成要素（数式、コード対比、失敗談のストーリー）をプロンプトとして入力し、HTML/CSSのドラフトを生成させました。<br>
+                                <span class="font-bold text-blue-600">最終的なコードの修正・統合・画像の埋め込みは、自分たちの手で行いました。</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-purple-500 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-5 text-6xl text-purple-500"><i class="fas fa-microphone-alt"></i></div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                        <span class="bg-purple-100 text-purple-600 w-10 h-10 rounded-full flex items-center justify-center mr-3 text-lg"><i class="fas fa-comment-dots"></i></span>
+                        発表原稿・構成
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="text-xs font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded mr-3 mt-1">Tool</span>
+                            <span class="text-slate-700 font-bold">Gemini</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-xs font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded mr-3 mt-1">Process</span>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                技術的な解説の流れをどう説明するかについてドラフトを作成させました。<br>
+                                <span class="font-bold text-purple-600">その内容をもとに、実際の体験に基づいて大幅に加筆・修正を行いました。</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-12 text-slate-400 text-xs flex items-center">
+                <i class="fas fa-check-circle mr-2 text-green-500"></i>
+                <span>授業のAI利用ガイドラインに準拠し、個人情報や他授業のデータは入力していません。</span>
+            </div>
         </div>
     </div>
 
